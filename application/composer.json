@@ -1,0 +1,21 @@
+{
+    "name": "wispoz/console",
+    "autoload": {
+        "psr-4": {
+            "Wispoz\\Console\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "wispoz"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "8.1.*",
+        "symfony/console": "^6.1"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
+    }
+}

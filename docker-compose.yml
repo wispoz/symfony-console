@@ -1,0 +1,46 @@
+version: '3'
+services:
+  db:
+    image: mariadb
+    container_name: '${CONTAINER_PREFIX}_db'
+    ports:
+      - "${MYSQL_LOCAL_PORT}:3306"
+    environment:
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - simple_network
+  app:
+    image: simple_php_image
+    container_name: '${CONTAINER_PREFIX}_app'
+    volumes:
+      - ./application:/var/www
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    networks:
+      - simple_network
+    env_file:
+      - .env
+  nginx:
+    image: nginx
+    container_name: '${CONTAINER_PREFIX}_nginx'
+    environment:
+      APP_CONTAINER: '${CONTAINER_PREFIX}_app'
+    ports:
+      - '${APP_PORT}:80'
+    volumes:
+      - ./docker/nginx/templates:/etc/nginx/templates
+      - ./application:/var/www
+    depends_on:
+      -   app
+    networks:
+      - simple_network
+networks:
+  simple_network:
+    driver: bridge
+volumes:
+  db_data:
+    driver: local
